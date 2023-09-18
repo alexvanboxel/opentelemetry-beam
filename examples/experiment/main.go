@@ -19,12 +19,12 @@ var (
 )
 
 func main() {
-	beam.Init()
 	flag.Parse()
 	_ = *gcpopts.Project
+	beam.Init()
 	pipeline, scope := beam.NewPipelineWithRoot()
 
-	fileName := "/Users/alex.vanboxel/src/open-telemetry/opentelemetry-collector-collibra/dist/config/beam-experiment.yaml"
+	fileName := "/Users/alex.vanboxel/repo/opentelemetry-beam/local/config_base.yaml"
 	content, err := os.ReadFile(filepath.Clean(fileName))
 	if err != nil {
 		fmt.Print(err)

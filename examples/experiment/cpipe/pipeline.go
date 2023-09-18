@@ -134,7 +134,7 @@ func createTransformation(scope beam.Scope, signal string, r any, p any, e any) 
 	if e != nil {
 		exporter := e.([]any)
 		for _, exporterName := range exporter {
-			pcollection = createComponentTransform(exporterName.(string), declaredExporters, scope, pcollection, signal, "exporters")
+			createComponentTransform(exporterName.(string), declaredExporters, scope, pcollection, signal, "exporters")
 		}
 	}
 }

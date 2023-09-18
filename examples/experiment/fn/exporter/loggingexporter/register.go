@@ -1,9 +1,7 @@
 package loggingexporter
 
 import (
-	"context"
 	"github.com/apache/beam/sdks/v2/go/pkg/beam"
-	"github.com/apache/beam/sdks/v2/go/pkg/beam/log"
 	"go.opentelemetry.io/collector/confmap"
 	"go.opentelemetry.io/collector/exporter/loggingexporter"
 	"opentelemetry-beam/examples/experiment/fn"
@@ -18,17 +16,17 @@ func CreateTransform(s beam.Scope, in beam.PCollection, signal, name string, cfg
 	defaultConfig := loggingexporter.NewFactory().CreateDefaultConfig()
 	err := cfg.Unmarshal(&defaultConfig)
 	if err != nil {
-
+		return beam.PCollection{}
 	}
-	config := defaultConfig.(*loggingexporter.Config)
-	_ = config
+	_ = defaultConfig.(*loggingexporter.Config)
+	s = fn.CreateExporterScope(s, "logging", signal, name)
 	switch signal {
 	case "metrics":
-		s = fn.CreateNamedScope(s, "logging", signal, name)
-		return beam.ParDo(s, &PubSubExporterFn{}, in)
+		beam.ParDo0(s, &LoggingMetricExporterFn{}, in)
 	case "logs":
+		beam.ParDo0(s, &LoggingLogExporterFn{}, in)
 	case "traces":
+		beam.ParDo0(s, &LoggingTraceExporterFn{}, in)
 	}
-	log.Fatalf(context.Background(), "")
 	return beam.PCollection{}
 }

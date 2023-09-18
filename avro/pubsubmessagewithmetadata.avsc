@@ -1,0 +1,33 @@
+{
+  "type": "record",
+  "namespace": "com.google.pubsub",
+  "name": "PubsubMessageWithMetadata",
+  "fields": [
+    {
+      "name": "subscription_name",
+      "type": "string"
+    },
+    {
+      "name": "message_id",
+      "type": "string"
+    },
+    {
+      "name": "publish_time",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-micros"
+      }
+    },
+    {
+      "name": "attributes",
+      "type": {
+        "type": "map",
+        "values": "string"
+      }
+    },
+    {
+      "name": "data",
+      "type": "bytes"
+    }
+  ]
+}

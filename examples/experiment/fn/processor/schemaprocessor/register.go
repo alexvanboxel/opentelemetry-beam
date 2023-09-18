@@ -15,7 +15,7 @@ func Register() {
 }
 
 func CreateTransform(s beam.Scope, in beam.PCollection, signal, name string, cfg *confmap.Conf) beam.PCollection {
-	s = fn.CreateNamedScope(s, "schema", signal, name)
+	s = fn.CreateProcessorScope(s, "schema", signal, name)
 	switch signal {
 	case "metrics":
 		return beam.ParDo(s, &PMetricSchema{
