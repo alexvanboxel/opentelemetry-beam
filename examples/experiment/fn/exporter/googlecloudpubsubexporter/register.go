@@ -14,7 +14,7 @@ func Register() {
 	registry.RegisterExporter("googlecloudpubsub", CreateTransform)
 }
 
-func CreateTransform(s beam.Scope, in beam.PCollection, signal, name string, cfg *confmap.Conf) beam.PCollection {
+func CreateTransform(s beam.Scope, in beam.PCollection, signal, componentName, name string, cfg *confmap.Conf) beam.PCollection {
 	defaultConfig := googlecloudpubsubexporter.NewFactory().CreateDefaultConfig()
 	err := cfg.Unmarshal(&defaultConfig)
 	if err != nil {

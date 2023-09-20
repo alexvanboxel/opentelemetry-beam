@@ -12,7 +12,7 @@ func Register() {
 	registry.RegisterExporter("logging", CreateTransform)
 }
 
-func CreateTransform(s beam.Scope, in beam.PCollection, signal, name string, cfg *confmap.Conf) beam.PCollection {
+func CreateTransform(s beam.Scope, in beam.PCollection, signal, componentName, name string, cfg *confmap.Conf) beam.PCollection {
 	defaultConfig := loggingexporter.NewFactory().CreateDefaultConfig()
 	err := cfg.Unmarshal(&defaultConfig)
 	if err != nil {

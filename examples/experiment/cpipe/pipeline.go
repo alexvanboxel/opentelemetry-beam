@@ -9,8 +9,7 @@ import (
 	"gopkg.in/yaml.v3"
 	"opentelemetry-beam/examples/experiment/fn/exporter/googlecloudpubsubexporter"
 	"opentelemetry-beam/examples/experiment/fn/exporter/loggingexporter"
-	"opentelemetry-beam/examples/experiment/fn/processor/resourceprocessor"
-	"opentelemetry-beam/examples/experiment/fn/processor/schemaprocessor"
+	"opentelemetry-beam/examples/experiment/fn/processor/genericprocessor"
 	"opentelemetry-beam/examples/experiment/fn/receiver/googlecloudpubsubreceiver"
 	"opentelemetry-beam/examples/experiment/fn/registry"
 	"strings"
@@ -20,8 +19,9 @@ func init() {
 	googlecloudpubsubreceiver.Register()
 	googlecloudpubsubexporter.Register()
 	loggingexporter.Register()
-	schemaprocessor.Register()
-	resourceprocessor.Register()
+	registry.RegisterProcessor("resource", genericprocessor.CreateTransform)
+	registry.RegisterProcessor("attributes", genericprocessor.CreateTransform)
+	registry.RegisterProcessor("schema", genericprocessor.CreateTransform)
 }
 
 var (
@@ -109,12 +109,13 @@ func createComponentTransform(componentName string, declaredComponent map[string
 	name := ""
 	if len(split) > 1 {
 		name = split[1]
+		componentName = split[0]
 	}
-	factory := registry.GetFactory(split[0], componentType)
+	factory := registry.GetFactory(componentName, componentType)
 	if factory == nil {
-		log.Fatalf(context.Background(), "Unable to find factory for %s, type %s", split[0], componentType)
+		log.Fatalf(context.Background(), "Unable to find factory for %s, type %s", componentName, componentType)
 	}
-	return factory.CreateTransformFunc(scope, pcollection, signal, name, conf)
+	return factory.CreateTransformFunc(scope, pcollection, signal, componentName, name, conf)
 }
 
 func createTransformation(scope beam.Scope, signal string, r any, p any, e any) {

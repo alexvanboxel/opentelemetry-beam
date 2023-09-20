@@ -1,10 +1,9 @@
-package processor
+package genericprocessor
 
 import (
 	"context"
 	"github.com/apache/beam/sdks/v2/go/pkg/beam/log"
 	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/confmap"
 	"go.opentelemetry.io/collector/consumer"
 	"go.opentelemetry.io/collector/processor"
 	"go.opentelemetry.io/otel/metric"
@@ -15,21 +14,14 @@ import (
 )
 
 type Base struct {
-	Config *confmap.Conf
+	Name   string
+	Config []byte
 }
 
 func (fn *Base) Capabilities() consumer.Capabilities {
 	return consumer.Capabilities{
 		MutatesData: true,
 	}
-}
-
-func (fn *Base) parseStringConfig(c component.Config) component.Config {
-	err := fn.Config.Unmarshal(&c)
-	if err != nil {
-		log.Fatalf(context.Background(), "Unable to decode the config block", err)
-	}
-	return c
 }
 
 func (fn *Base) createSettings() processor.CreateSettings {

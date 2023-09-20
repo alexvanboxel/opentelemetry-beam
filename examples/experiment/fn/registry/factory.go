@@ -5,7 +5,7 @@ import (
 	"go.opentelemetry.io/collector/confmap"
 )
 
-type CreateTransformFunc func(s beam.Scope, in beam.PCollection, signal, name string, cfg *confmap.Conf) beam.PCollection
+type CreateTransformFunc func(s beam.Scope, in beam.PCollection, signal, componentName, name string, cfg *confmap.Conf) beam.PCollection
 
 type FactoryFn func(cfg *confmap.Conf) any
 
